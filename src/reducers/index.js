@@ -2,14 +2,14 @@
 
 import { combineReducers } from 'redux';
 import { albumsReducer } from './albums';
-import { reviewsReducer } from './reviews';
-import { cartReducer } from './cart';
+import { photosReducer } from './photos';
+import { commentReducer } from './comment';
 
 
 const rootreducer = combineReducers({
     albums: albumsReducer,
-    reviews: reviewsReducer,
-    cart: cartReducer
+    photos: photosReducer,
+    comment: commentReducer
 });
 
 export default rootreducer;

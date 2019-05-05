@@ -9,8 +9,8 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 const preLoadedState = {
     albums: [],
-    reviews: {},
-    cart: []
+    photos: [],
+    comment: []
 };
 
 let middleware = [ReduxThunk];

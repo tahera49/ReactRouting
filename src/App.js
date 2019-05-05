@@ -49,7 +49,7 @@ class App extends Component {
     })
   }
   render() {
-    
+    if(this.state.albums.albums && this.state.albums.albums.length>0){
     return (
       <div className="container" >
         <Router>
@@ -75,6 +75,9 @@ class App extends Component {
         </Router>
       </div>
     );
+  }else{
+    return <div>Loading....</div>
+ }
   }
 }
 
