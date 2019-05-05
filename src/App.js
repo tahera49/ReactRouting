@@ -1,57 +1,78 @@
-import React, { Component } from 'react'
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import NavBar from './components/NavBar';
+import Album from './components/Album';
+
+
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import Home from './components/Home';
+
+import { loadAlbums } from './actions/albums';
+import store from './store'
+
+
+const NoMatch = ({ location }) => (
+  <div>
+    <h3>
+      No match for <code>{location.pathname}</code>
+    </h3>
+  </div>
+);
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      greeting: ''
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+     
+      albums: []
+    }
   }
 
-  handleChange(event) {
-    this.setState({ name: event.target.value });
+  componentDidMount() {
+
+    store.subscribe(() => {
+      console.log('App component : subscribing albums');
+      let albums = store.getState();
+    
+      this.setState({ albums})
+    });
+
+    store.dispatch(loadAlbums())
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
-    fetch(`/api/greeting?name=${encodeURIComponent(this.state.name)}`)
-      .then(response => response.json())
-      .then(state => this.setState(state));
+  renderAlbums() {
+    let { albums } = this.state;
+    
+    return albums.albums.map((p, idx) => {
+      return (
+        <Album value={p} key={idx} />
+      )
+    })
   }
-
   render() {
+    
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <form onSubmit={this.handleSubmit}>
-            <label htmlFor="name">Enter your name: </label>
-            <input
-              id="name"
-              type="text"
-              value={this.state.name}
-              onChange={this.handleChange}
-            />
-            <button type="submit">Submit</button>
-          </form>
-          <p>{this.state.greeting}</p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-        </a>
-        </header>
+      <div className="container" >
+        <Router>
+          <div>
+            <NavBar title="Album List" />
+           
+            <ul className="nav nav-pills">
+              <li className="nav-item">
+                <Link className="nav-link" to="albums">View Albums</Link>
+              </li>
+             
+            </ul>
+            <hr />
+
+            <Switch>
+              <Route path={"/"} exact={true} component={Home} />
+              <Route path={"/albums"} render={() => this.renderAlbums()} />
+             
+              <Route exact={true} component={NoMatch} />
+            </Switch>
+
+          </div>
+        </Router>
       </div>
     );
   }
